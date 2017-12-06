@@ -10,8 +10,8 @@ using System;
 
 namespace App.Migrations
 {
-    [DbContext(typeof(RoomContext))]
-    partial class RoomContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ScheduleContext))]
+    partial class ScheduleContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,18 @@ namespace App.Migrations
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn)
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
+
+            modelBuilder.Entity("ScheduleApi.Models.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Groups");
+                });
 
             modelBuilder.Entity("ScheduleApi.Models.Room", b =>
                 {

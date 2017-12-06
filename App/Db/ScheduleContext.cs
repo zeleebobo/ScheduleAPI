@@ -7,14 +7,17 @@ using ScheduleApi.Models;
 
 namespace App.Db
 {
-    public class RoomContext : DbContext
+    public class ScheduleContext : DbContext
     {
-        public DbSet<Room> Rooms { get; set; }
-
+        public static string ConnectionString { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(
-                "Host=localhost;Port=5432;Database=usersdb;Username=postgres;Password=5525854565");
+            optionsBuilder.UseNpgsql(ConnectionString);
         }
+
+        public DbSet<Group> Groups { get; private set; }
+
+        public DbSet<Room> Rooms { get; private set; }
+
     }
 }

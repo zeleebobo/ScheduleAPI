@@ -11,61 +11,60 @@ namespace App.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class RoomsController : Controller
+    public class GroupsController : Controller
     {
-        // GET: api/Rooms
+        // GET: api/Groups
         [HttpGet]
-        public IEnumerable<Room> Get()
+        public IEnumerable<Group> Get()
         {
             using (var context = new ScheduleContext())
             {
-                return context.Rooms.ToArray();
+                return context.Groups.ToArray();
             }
         }
 
-        // GET: api/Rooms/5
-        [HttpGet("{id}", Name = "GetRooms")]
+        // GET: api/Groups/5
+        [HttpGet("{id}", Name = "GetGroups")]
         public IActionResult Get(int id)
         {
             using (var context = new ScheduleContext())
             {
-                var value = context.Rooms.SingleOrDefault(x => x.Id == id);
-                if (value is default(Room)) return BadRequest();
+                var value = context.Groups.SingleOrDefault(x => x.Id == id);
+                if (value == null) return BadRequest();
                 return Ok(value);
             }
         }
         
-        // POST: api/Rooms
+        // POST: api/Groups
         [HttpPost]
-        public IActionResult Post([FromBody]Room room)
+        public IActionResult Post([FromBody]Group group)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             using (var context = new ScheduleContext())
             {
-                context.Rooms.Add(room);
+                context.Groups.Add(group);
                 context.SaveChanges();
             }
 
-            return CreatedAtAction("Get", new {id = room.Id}, room);
+            return CreatedAtAction("Get", new { id = group.Id }, group);
         }
         
-        // PUT: api/Rooms/5
+        // PUT: api/Groups/5
         //[HttpPut("{id}")]
         //public void Put(int id, [FromBody]string value)
         //{
-
         //}
         
         // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id:int}")]
+        [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             using (var context = new ScheduleContext())
             {
-                var room = context.Rooms.FirstOrDefault(x => x.Id == id);
-                if (room == null) return BadRequest();
-                context.Remove(room);
+                var group = context.Groups.FirstOrDefault(x => x.Id == id);
+                if (group == null) return BadRequest();
+                context.Remove(group);
                 context.SaveChanges();
             }
 

@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Db;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -25,6 +27,9 @@ namespace App
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            ScheduleContext.ConnectionString = Configuration.GetConnectionString("PostgreSQL");
+
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new Info()
                 {
