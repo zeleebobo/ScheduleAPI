@@ -11,40 +11,40 @@ namespace App.Controllers
 {
     [Produces("application/json")]
     [Route("api/[controller]")]
-    public class GroupsController : Controller
+    public class TeachersController : Controller
     {
         [HttpGet]
-        public IEnumerable<Group> Get()
+        public IEnumerable<Teacher> Get()
         {
             using (var context = new ScheduleContext())
             {
-                return context.Groups.ToArray();
+                return context.Teachers.ToArray();
             }
         }
-        
-        [HttpGet("{id}", Name = "GetGroups")]
+
+        [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
             using (var context = new ScheduleContext())
             {
-                var value = context.Groups.SingleOrDefault(x => x.Id == id);
+                var value = context.Teachers.SingleOrDefault(x => x.Id == id);
                 if (value == null) return BadRequest();
                 return Ok(value);
             }
         }
-        
+
         [HttpPost]
-        public IActionResult Post([FromBody]Group group)
+        public IActionResult Post([FromBody]Teacher teacher)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             using (var context = new ScheduleContext())
             {
-                context.Groups.Add(group);
+                context.Teachers.Add(teacher);
                 context.SaveChanges();
             }
 
-            return CreatedAtAction("Get", new { id = group.Id }, group);
+            return CreatedAtAction("Get", new { id = teacher.Id }, teacher);
         }
 
         [HttpDelete("{id}")]
@@ -52,9 +52,9 @@ namespace App.Controllers
         {
             using (var context = new ScheduleContext())
             {
-                var group = context.Groups.FirstOrDefault(x => x.Id == id);
-                if (group == null) return BadRequest();
-                context.Remove(group);
+                var teacher = context.Teachers.FirstOrDefault(x => x.Id == id);
+                if (teacher == null) return BadRequest();
+                context.Remove(teacher);
                 context.SaveChanges();
             }
 

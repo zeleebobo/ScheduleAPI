@@ -19,5 +19,7 @@ namespace App.Db
 
         public DbSet<Room> Rooms { get; private set; }
 
+        public DbSet<Teacher> Teachers { get; private set; }
+
     }
 }

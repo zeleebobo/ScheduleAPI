@@ -11,9 +11,10 @@ using System;
 namespace App.Migrations
 {
     [DbContext(typeof(ScheduleContext))]
-    partial class ScheduleContextModelSnapshot : ModelSnapshot
+    [Migration("20171206144506_Teacher")]
+    partial class Teacher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
