@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using ScheduleApi.Models;
+using ScheduleApi.Infrastructure.Entities;
 
-namespace App.Db
+namespace ScheduleApi.Infrastructure.Db
 {
     public class ScheduleContext : DbContext
     {
@@ -17,9 +17,10 @@ namespace App.Db
 
         public DbSet<Group> Groups { get; private set; }
 
-        public DbSet<Room> Rooms { get; private set; }
+        public DbSet<RoomEntity> Rooms { get; private set; }
 
-        public DbSet<Teacher> Teachers { get; private set; }
+        public DbSet<TeacherEntity> Teachers { get; private set; }
 
+        public DbSet<DisciplineEntity> Disciplines { get; private set; }
     }
 }

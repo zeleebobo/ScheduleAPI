@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using App.Models;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace ScheduleApi.Models
 {
-    public class Teacher
+    public class GroupValue : TEntity
     {
-        [JsonProperty("id")]
-        public int Id { get; set; }
-
         [JsonProperty("name")]
+        [JsonRequired]
+        [Required]
         public string Name { get; set; }
-
-        [JsonProperty("email")]
-        public string Email { get; set; }
     }
 }
