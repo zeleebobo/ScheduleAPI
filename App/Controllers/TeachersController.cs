@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using App.Db;
-using Microsoft.AspNetCore.Http;
+using App.DtoModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ScheduleApi.Models;
+using ScheduleApi.DataAccess;
+using ScheduleApi.Domain.Entities;
 
 namespace App.Controllers
 {
@@ -13,50 +13,43 @@ namespace App.Controllers
     [Route("api/[controller]")]
     public class TeachersController : Controller
     {
+        private IUnitOfWork unitOfWork = new UnitOfWork(new ScheduleContext());
+
         [HttpGet]
-        public IEnumerable<Teacher> Get()
+        public IEnumerable<TeacherDto> Get()
         {
-            using (var context = new ScheduleContext())
-            {
-                return context.Teachers.ToArray();
-            }
+            return Mapper.Map<IEnumerable<Teacher>, IEnumerable<TeacherDto>>(unitOfWork.Teachers.GetAll());
         }
 
         [HttpGet("{id:int}")]
         public IActionResult Get(int id)
         {
-            using (var context = new ScheduleContext())
-            {
-                var value = context.Teachers.SingleOrDefault(x => x.Id == id);
-                if (value == null) return BadRequest();
-                return Ok(value);
-            }
+            var value = unitOfWork.Teachers.GetById(id);
+            if (value == null) return BadRequest("Invalid Teacher Id");
+            return Ok(Mapper.Map<TeacherDto>(value));
+
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody]Teacher teacher)
+        public IActionResult Post([FromBody]TeacherDto teacher)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            using (var context = new ScheduleContext())
-            {
-                context.Teachers.Add(teacher);
-                context.SaveChanges();
-            }
+            var teacherEntity = Mapper.Map<Teacher>(teacher);
+                unitOfWork.Teachers.Add(teacherEntity);
+            unitOfWork.Complete();
 
-            return CreatedAtAction("Get", new { id = teacher.Id }, teacher);
+            return CreatedAtAction("Get", new { id = teacherEntity.Id }, teacher);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            using (var context = new ScheduleContext())
-            {
-                var teacher = context.Teachers.FirstOrDefault(x => x.Id == id);
-                if (teacher == null) return BadRequest();
-                context.Remove(teacher);
-                context.SaveChanges();
-            }
+            var teacher = unitOfWork.Teachers.GetById(id);
+            if (teacher == null) return BadRequest("Invalid Teacher Id");
+
+            unitOfWork.Teachers.Delete(teacher);
+            unitOfWork.Complete();
 
             return Ok();
         }

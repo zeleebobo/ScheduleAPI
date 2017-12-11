@@ -1,9 +1,11 @@
-﻿using App.Db;
+﻿using App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ScheduleApi.DataAccess;
 using Swashbuckle.AspNetCore.Swagger;
+
 
 namespace App
 {
@@ -22,6 +24,7 @@ namespace App
             services.AddMvc();
 
             ScheduleContext.ConnectionString = Configuration.GetConnectionString("PostgreSQL");
+            AutoMapperInitializer.Initialize();
 
             services.AddSwaggerGen(c =>
                 c.SwaggerDoc("v1", new Info()

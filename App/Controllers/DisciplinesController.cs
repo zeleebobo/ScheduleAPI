@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using App.Db;
-using App.Models;
+using App.DtoModels;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ScheduleApi.Models;
+using ScheduleApi.DataAccess;
+using ScheduleApi.DataAccess.Repos;
+using ScheduleApi.Domain.Entities;
+using ScheduleApi.DtoModels;
+
 
 namespace App.Controllers
 {
@@ -13,86 +16,74 @@ namespace App.Controllers
     [Route("api/[controller]")]
     public class DisciplinesController : Controller
     {
+        private IUnitOfWork unitOfWork = new UnitOfWork(new ScheduleContext());
+
         [HttpGet]
-        public IEnumerable<Discipline> Get()
+        public IEnumerable<DisciplineDto> Get()
         {
-            using (var context = new ScheduleContext())
-            {
-                return context.Disciplines.ToArray();
-            }
+            return Mapper.Map<IEnumerable<Discipline>, List<DisciplineDto>>(unitOfWork.Disciplines.GetAll());
         }
 
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            using (var context = new ScheduleContext())
-            {
-                var value = context.Disciplines.SingleOrDefault(x => x.Id == id);
-                if (value == null) return BadRequest();
-                return Ok(value);
-            }
+            var value = unitOfWork.Disciplines.GetById(id);
+            if (value == null) return BadRequest();
+            return Ok(Mapper.Map<Discipline, DisciplineDto>(value));
         }
-
+        
         [HttpPost]
-        public IActionResult Post([FromBody] Discipline discipline)
+        public IActionResult Post([FromBody] DisciplineDto discipline)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            using (var context = new ScheduleContext())
-            {
-                context.Disciplines.Add(discipline);
-                context.SaveChanges();
-            }
+            var disciplineEntity = Mapper.Map<DisciplineDto, Discipline>(discipline);
+            unitOfWork.Disciplines.Add(disciplineEntity);
+            unitOfWork.Complete();
 
-            return CreatedAtAction("Get", new {id = discipline.Id}, discipline);
+            return CreatedAtAction("Get", new {id = disciplineEntity.Id}, discipline);
         }
+        
 
         [HttpPost("{id}/teachers/{teacherId}")]
         public IActionResult AddTeacher(int id, int teacherId)
         {
-            using (var context = new ScheduleContext())
-            {
-                if (!context.Disciplines.Any(x => x.Id == id) || 
-                    !context.Teachers.Any(x => x.Id == teacherId))
-                    return BadRequest();
-                var discipline = context.Disciplines.First(x => x.Id == id);
-                if (discipline.TeacherIds.Contains(teacherId))
-                    return BadRequest();
-                discipline.TeacherIds.Add(teacherId);
-                context.SaveChanges();
-                return Ok();
-            }
+            var discipline = unitOfWork.Disciplines.GetById(id);
+            var teacher = unitOfWork.Teachers.GetById(teacherId);
+            if (discipline == null || teacher == null) return BadRequest();
+
+            discipline.TeacherDisciplines.Add(new TeacherDiscipline(discipline, teacher));
+            unitOfWork.Complete();
+
+            return Ok();
+
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            using (var context = new ScheduleContext())
-            {
-                var discipline = context.Disciplines.FirstOrDefault(x => x.Id == id);
-                if (discipline == null) return BadRequest();
-                context.Remove(discipline);
-                context.SaveChanges();
-            }
+            var discipline = unitOfWork.Disciplines.GetById(id);
+            if (discipline == null) return BadRequest();
+            unitOfWork.Disciplines.Delete(discipline);
+            unitOfWork.Complete();
 
             return Ok();
         }
 
+        
         [HttpDelete("{id}/teachers/{teacherId}")]
         public IActionResult DeleteTeacher(int id, int teacherId)
         {
-            using (var context = new ScheduleContext())
-            {
-                if (!context.Disciplines.Any(x => x.Id == id) ||
-                    !context.Teachers.Any(x => x.Id == teacherId))
-                    return BadRequest();
-                var discipline = context.Disciplines.First(x => x.Id == id);
-                if (discipline.TeacherIds.Contains(teacherId))
-                    return BadRequest();
-                discipline.TeacherIds.Remove(teacherId);
-                context.SaveChanges();
-                return Ok();
-            }
+            var discipline = unitOfWork.Disciplines.GetById(id);
+            if (discipline == null) return BadRequest("Invalid discipline Id");
+
+            var teacherDiscipline = discipline.TeacherDisciplines.FirstOrDefault(x => x.Teacher.Id == teacherId);
+            if (teacherDiscipline == null) return BadRequest("Invalid teacher Id");
+
+            discipline.TeacherDisciplines.Remove(teacherDiscipline);
+            unitOfWork.Complete();
+
+            return Ok();
         }
     }
 }

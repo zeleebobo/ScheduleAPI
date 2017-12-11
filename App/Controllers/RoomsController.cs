@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using App.Db;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ScheduleApi.Models;
+using ScheduleApi.DataAccess;
+using ScheduleApi.Domain.Entities;
+using ScheduleApi.DtoModels;
 
 namespace App.Controllers
 {
@@ -13,62 +12,41 @@ namespace App.Controllers
     [Route("api/[controller]")]
     public class RoomsController : Controller
     {
-        // GET: api/Rooms
+        private IUnitOfWork unitOfWork = new UnitOfWork(new ScheduleContext());
+
         [HttpGet]
-        public IEnumerable<Room> Get()
+        public IEnumerable<RoomDto> Get()
         {
-            using (var context = new ScheduleContext())
-            {
-                return context.Rooms.ToArray();
-            }
+            return Mapper.Map<IEnumerable<RoomDto>>(unitOfWork.Rooms.GetAll());
         }
 
-        // GET: api/Rooms/5
         [HttpGet("{id}", Name = "GetRooms")]
         public IActionResult Get(int id)
         {
-            using (var context = new ScheduleContext())
-            {
-                var value = context.Rooms.SingleOrDefault(x => x.Id == id);
-                if (value is default(Room)) return BadRequest();
-                return Ok(value);
-            }
+            var value = unitOfWork.Rooms.GetById(id);
+            if (value == null) return BadRequest();
+            return Ok(Mapper.Map<RoomDto>(value));
         }
-        
-        // POST: api/Rooms
+
         [HttpPost]
-        public IActionResult Post([FromBody]Room room)
+        public IActionResult Post([FromBody]RoomDto room)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            using (var context = new ScheduleContext())
-            {
-                context.Rooms.Add(room);
-                context.SaveChanges();
-            }
+            var roomEntity = Mapper.Map<Room>(room);
+            unitOfWork.Rooms.Add(roomEntity);
+            unitOfWork.Complete();
 
-            return CreatedAtAction("Get", new {id = room.Id}, room);
+            return CreatedAtAction("Get", new {id = roomEntity.Id}, room);
         }
-        
-        // PUT: api/Rooms/5
-        //[HttpPut("{id}")]
-        //public void Put(int id, [FromBody]string value)
-        //{
 
-        //}
-        
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id:int}")]
         public IActionResult Delete(int id)
         {
-            using (var context = new ScheduleContext())
-            {
-                var room = context.Rooms.FirstOrDefault(x => x.Id == id);
-                if (room == null) return BadRequest();
-                context.Remove(room);
-                context.SaveChanges();
-            }
-
+            var room = unitOfWork.Rooms.GetById(id);
+            if (room == null) return BadRequest("Invalid Room Id");
+            unitOfWork.Rooms.Delete(room);
+            unitOfWork.Complete();
             return Ok();
         }
     }
