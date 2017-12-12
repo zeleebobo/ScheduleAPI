@@ -9,8 +9,8 @@ namespace ScheduleApi.DataAccess.Repos
 {
     public class Repository<TEntity> : IRepository<TEntity> where TEntity: class
     {
-        private DbContext context;
-        private DbSet<TEntity> entities;
+        protected DbContext context;
+        protected DbSet<TEntity> entities;
         public Repository(DbContext context)
         {
             this.context = context;
@@ -27,7 +27,7 @@ namespace ScheduleApi.DataAccess.Repos
             return entities.Add(entity).Entity;
         }
 
-        public TEntity GetById(int id)
+        public virtual TEntity GetById(int id)
         {
             return entities.Find(id);
         }
@@ -42,7 +42,7 @@ namespace ScheduleApi.DataAccess.Repos
             entities.Remove(entity);
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
             return entities.ToList();
         }

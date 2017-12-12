@@ -9,9 +9,11 @@ namespace ScheduleApi.DtoModels
     public class Credentials
     {
         [JsonProperty("login")]
+        [JsonRequired]
         public string Login { get; set; }
 
         [JsonProperty("password")]
+        [JsonRequired]
         public string Password { get; set; }
     }
 }

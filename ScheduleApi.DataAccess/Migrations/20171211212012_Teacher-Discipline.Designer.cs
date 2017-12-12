@@ -12,9 +12,10 @@ using System;
 namespace ScheduleApi.DataAccess.Migrations
 {
     [DbContext(typeof(ScheduleContext))]
-    partial class ScheduleContextModelSnapshot : ModelSnapshot
+    [Migration("20171211212012_Teacher-Discipline")]
+    partial class TeacherDiscipline
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,8 +65,6 @@ namespace ScheduleApi.DataAccess.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Created");
 
                     b.Property<string>("Name");
 
@@ -128,13 +127,18 @@ namespace ScheduleApi.DataAccess.Migrations
 
             modelBuilder.Entity("ScheduleApi.Domain.Entities.TeacherDiscipline", b =>
                 {
-                    b.Property<int>("TeacherId");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
-                    b.Property<int>("DisciplineId");
+                    b.Property<int?>("DisciplineId");
 
-                    b.HasKey("TeacherId", "DisciplineId");
+                    b.Property<int?>("TeacherId");
+
+                    b.HasKey("Id");
 
                     b.HasIndex("DisciplineId");
+
+                    b.HasIndex("TeacherId");
 
                     b.ToTable("TeacherDisciplines");
                 });
@@ -170,13 +174,11 @@ namespace ScheduleApi.DataAccess.Migrations
                 {
                     b.HasOne("ScheduleApi.Domain.Entities.Discipline", "Discipline")
                         .WithMany("TeacherDisciplines")
-                        .HasForeignKey("DisciplineId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("DisciplineId");
 
                     b.HasOne("ScheduleApi.Domain.Entities.Teacher", "Teacher")
                         .WithMany("TeacherDisciplines")
-                        .HasForeignKey("TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TeacherId");
                 });
 #pragma warning restore 612, 618
         }

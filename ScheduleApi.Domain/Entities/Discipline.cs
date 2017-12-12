@@ -19,8 +19,8 @@ namespace ScheduleApi.Domain.Entities
         [Required]
         public string Name { get; private set; }
 
-        public virtual ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
+        public ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
 
-        public virtual ICollection<ScheduleEntry> Entries { get; private set; }
+        public ICollection<ScheduleEntry> Entries { get; private set; }
     }
 }

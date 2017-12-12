@@ -18,8 +18,10 @@ namespace ScheduleApi.Domain.Entities
             Teacher = teacher;
         }
 
-        public int Id { get; private set; }
-        public Teacher Teacher { get; private set; }
-        public Discipline Discipline { get; private set; }
+        public int TeacherId { get; private set; }
+        public virtual Teacher Teacher { get; private set; }
+
+        public int DisciplineId { get; private set; }
+        public virtual Discipline Discipline { get; private set; }
     }
 }

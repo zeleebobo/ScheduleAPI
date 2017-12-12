@@ -13,6 +13,7 @@ namespace ScheduleApi.DataAccess
         IRepository<Room> Rooms { get; }
         IRepository<Schedule> Schedules { get; }
         IRepository<ScheduleEntry> ScheduleEntries { get; }
+        IRepository<TeacherDiscipline> TeacherDisciplines { get; }
 
         int Complete();
     }

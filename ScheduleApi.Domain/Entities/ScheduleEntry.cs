@@ -18,7 +18,7 @@ namespace ScheduleApi.Domain.Entities
         }
 
         [Key]
-        public int Id { get; private set; }
+        public int Id { get; set; }
 
         [Required]
         public DaysEnum DayOfWeek { get; set; }
@@ -41,6 +41,6 @@ namespace ScheduleApi.Domain.Entities
         public int SubGroupNum { get; set; }
 
 
-        public virtual Schedule Schedule { get; set; }
+        public Schedule Schedule { get; set; }
     }
 }

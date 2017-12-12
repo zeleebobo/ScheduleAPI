@@ -12,12 +12,13 @@ namespace ScheduleApi.DataAccess
         public UnitOfWork(ScheduleContext context)
         {
             this.context = context;
-            Disciplines = new Repository<Discipline>(context);
+            Disciplines = new DisciplineRepository(context); //new Repository<Discipline>(context);
             Groups = new Repository<Group>(context);
             Teachers = new Repository<Teacher>(context);
             Rooms = new Repository<Room>(context);
-            Schedules = new Repository<Schedule>(context);
+            Schedules = new ScheduleRepository(context); // new Repository<Schedule>(context);
             ScheduleEntries = new Repository<ScheduleEntry>(context);
+            TeacherDisciplines = new Repository<TeacherDiscipline>(context);
         }
 
         public IRepository<Discipline> Disciplines { get; }
@@ -26,6 +27,7 @@ namespace ScheduleApi.DataAccess
         public IRepository<Room> Rooms { get; }
         public IRepository<Schedule> Schedules { get; }
         public IRepository<ScheduleEntry> ScheduleEntries { get; }
+        public IRepository<TeacherDiscipline> TeacherDisciplines { get; }
 
         public int Complete()
         {

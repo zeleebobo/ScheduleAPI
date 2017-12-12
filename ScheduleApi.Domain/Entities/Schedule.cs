@@ -13,14 +13,17 @@ namespace ScheduleApi.Domain.Entities
 
         public string Name { get; set; }
 
-        private ICollection<ScheduleEntry> entries;
+        public DateTime Created { get; set; }
+
+       // private ICollection<ScheduleEntry> entries;
 
         public Schedule()
         {
             Name = "Schedule";
+            Entries = new List<ScheduleEntry>();
         }
 
-        public ICollection<ScheduleEntry> Entries { get; }
+        public ICollection<ScheduleEntry> Entries { get; private set; }
 
         public bool IsCorrect
         {

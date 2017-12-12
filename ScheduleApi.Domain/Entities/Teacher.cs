@@ -22,7 +22,7 @@ namespace ScheduleApi.Domain.Entities
         [RegularExpression("\\w+@\\w+[.]\\w{2,4}")] // email expression
         public string Email { get; private set; }
 
-        public ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
+        public virtual ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
 
         public virtual ICollection<ScheduleEntry> Entries { get; private set; }
     }
