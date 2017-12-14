@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 
 namespace App.DtoModels
 {
@@ -15,6 +14,5 @@ namespace App.DtoModels
 
         [JsonProperty("created")]
         public DateTime Created { get; set; }
-        
     }
 }

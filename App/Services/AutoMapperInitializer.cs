@@ -28,16 +28,8 @@ namespace App.Services
                 cfg.CreateMap<Teacher, OpenTeacherDto>();
                 cfg.CreateMap<Teacher, TeacherDto>();
 
-                cfg.CreateMap<ScheduleWithEntriesDto, Schedule>();
-                cfg.CreateMap<Schedule, ScheduleWithEntriesDto>();
-                cfg.CreateMap<ScheduleDto, Schedule>();
-                cfg.CreateMap<Schedule, ScheduleDto>();
-
                 cfg.CreateMap<Schedule, IEnumerable<ScheduleGroupDto>>().ConvertUsing<ScheduleConverter>();
-
-                cfg.CreateMap<ScheduleEntry, ScheduleEntryDto>();
                 cfg.CreateMap<ScheduleEntry, ScheduleGroupEntryDto>();
-                cfg.CreateMap<ScheduleEntryDto, ScheduleEntry>();
             });
         }
     }

@@ -24,37 +24,21 @@ namespace App.Services
 
                 var groupEntriesByDay = groupEntries.Entries
                                             .GroupBy(x => x.DayOfWeek)
-                                            .ToDictionary(x => x.Key, x => x);
-                if (groupEntriesByDay.ContainsKey(ScheduleEntry.DaysEnum.Monday))
-                    scheduleGroup.Monday =
-                        Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>(
-                            groupEntriesByDay[ScheduleEntry.DaysEnum.Monday]);
+                                            .ToDictionary(x => x.Key.ToString(), Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>);
+                var days = Enum.GetValues(typeof(ScheduleEntry.DaysEnum)).Cast<ScheduleEntry.DaysEnum>().Select(x => x.ToString()).ToArray();
 
-                if (groupEntriesByDay.ContainsKey(ScheduleEntry.DaysEnum.Tuesday))
-                    scheduleGroup.Tuesday =
-                    Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>(
-                        groupEntriesByDay[ScheduleEntry.DaysEnum.Tuesday]);
+                foreach (var day in days)
+                {
+                    if (groupEntriesByDay.ContainsKey(day)) continue;
+                    groupEntriesByDay[day] = new List<ScheduleGroupEntryDto>();
+                }
 
-                if (groupEntriesByDay.ContainsKey(ScheduleEntry.DaysEnum.Wednesday))
-                    scheduleGroup.Wednesday =
-                    Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>(
-                        groupEntriesByDay[ScheduleEntry.DaysEnum.Wednesday]);
-
-                if (groupEntriesByDay.ContainsKey(ScheduleEntry.DaysEnum.Thursday))
-                    scheduleGroup.Thursday =
-                    Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>(
-                        groupEntriesByDay[ScheduleEntry.DaysEnum.Thursday]);
-
-                if (groupEntriesByDay.ContainsKey(ScheduleEntry.DaysEnum.Friday))
-                    scheduleGroup.Friday =
-                    Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>(
-                        groupEntriesByDay[ScheduleEntry.DaysEnum.Friday]);
-
-                if (groupEntriesByDay.ContainsKey(ScheduleEntry.DaysEnum.Saturday))
-                    scheduleGroup.Saturday =
-                    Mapper.Map<IEnumerable<ScheduleEntry>, IEnumerable<ScheduleGroupEntryDto>>(
-                        groupEntriesByDay[ScheduleEntry.DaysEnum.Saturday]);
-
+                scheduleGroup.Monday = groupEntriesByDay[days[0]];
+                scheduleGroup.Tuesday = groupEntriesByDay[days[1]];
+                scheduleGroup.Wednesday = groupEntriesByDay[days[2]];
+                scheduleGroup.Thursday = groupEntriesByDay[days[3]];
+                scheduleGroup.Friday = groupEntriesByDay[days[4]];
+                scheduleGroup.Saturday = groupEntriesByDay[days[5]];
 
                 yield return scheduleGroup;
             }
