@@ -10,7 +10,7 @@ namespace ScheduleApi.DtoModels
         [JsonProperty("name")]
         public string Name { get; set; }
 
-        [JsonProperty("teachersIds")]
-        public ICollection<int> TeachersIds { get; set; }
+        [JsonProperty("teachers")]
+        public ICollection<OpenTeacherDto> Teachers { get; set; }
     }
 }

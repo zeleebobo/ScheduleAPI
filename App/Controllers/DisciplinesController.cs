@@ -39,19 +39,14 @@ namespace App.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            foreach (var teacherId in discipline.TeachersIds)
-            {
-                var teacherEntity = unitOfWork.Teachers.GetById(teacherId);
-                if (teacherEntity == null) return BadRequest($"Invalid Teacher Id ({teacherId})");
-            }
-
             var disciplineEntity = Mapper.Map<DisciplineDto, Discipline>(discipline);
             unitOfWork.Disciplines.Add(disciplineEntity);
 
-            foreach (var teacherId in discipline.TeachersIds)
+            foreach (var teacher in discipline.Teachers)
             {
-                var teacher = unitOfWork.Teachers.GetById(teacherId);
-                unitOfWork.TeacherDisciplines.Add(new TeacherDiscipline(disciplineEntity, teacher));
+                var teacherEntity = unitOfWork.Teachers.GetById(teacher.Id);
+                if (teacherEntity == null) return BadRequest($"Invalid Teacher Id ({teacher.Id})");
+                unitOfWork.TeacherDisciplines.Add(new TeacherDiscipline(disciplineEntity, teacherEntity));
             }
             
             unitOfWork.Complete();
@@ -65,9 +60,10 @@ namespace App.Controllers
         {
             var discipline = unitOfWork.Disciplines.GetById(id);
             var teacher = unitOfWork.Teachers.GetById(teacherId);
-            if (discipline == null || teacher == null) return BadRequest();
+            if (discipline == null) return BadRequest("Invalid discipline Id");
+            if (teacher == null) return BadRequest("Invalid teacher Id");
 
-            unitOfWork.TeacherDisciplines.Add(new TeacherDiscipline(discipline, teacher));
+            discipline.AddTeacher(teacher);
             unitOfWork.Complete();
 
             return Ok();
@@ -90,12 +86,11 @@ namespace App.Controllers
         public IActionResult DeleteTeacher(int id, int teacherId)
         {
             var discipline = unitOfWork.Disciplines.GetById(id);
+            var teacher = unitOfWork.Teachers.GetById(teacherId);
             if (discipline == null) return BadRequest("Invalid discipline Id");
+            if (teacher == null) return BadRequest("Invalid teacher Id");
 
-            var teacherDiscipline = discipline.TeacherDisciplines.FirstOrDefault(x => x.TeacherId == teacherId);
-            if (teacherDiscipline == null) return BadRequest($"Invalid teacher Id ({teacherId})");
-
-            discipline.TeacherDisciplines.Remove(teacherDiscipline);
+            discipline.RemoveTeacher(teacher);
             unitOfWork.Complete();
 
             return Ok();

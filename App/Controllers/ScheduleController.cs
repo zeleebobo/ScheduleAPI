@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using App.DtoModels;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +24,7 @@ namespace App.Controllers
         {
             var scheduleEntity = unitOfWork.Schedules.GetById(id);
             if (scheduleEntity == null) return BadRequest($"Invalid Schedule Id ({id})");
-            var schedule = Mapper.Map<ScheduleWithEntriesDto>(scheduleEntity);
+            var schedule = Mapper.Map<Schedule, IEnumerable<ScheduleGroupDto>>(scheduleEntity);
             return Ok(schedule);
         }
 

@@ -15,12 +15,12 @@ namespace ScheduleApi.DataAccess.Repos
 
         public override IEnumerable<Discipline> GetAll()
         {
-            return context.Set<Discipline>().Include(x => x.TeacherDisciplines);
+            return context.Set<Discipline>().Include(x => x.Teachers);
         }
 
         public override Discipline GetById(int id)
         {
-            return context.Set<Discipline>().Include(x => x.TeacherDisciplines).SingleOrDefault(x => x.Id == id);
+            return context.Set<Discipline>().Include(x => x.Teachers).SingleOrDefault(x => x.Id == id);
         }
     }
 }

@@ -19,8 +19,22 @@ namespace ScheduleApi.Domain.Entities
         [Required]
         public string Name { get; private set; }
 
-        public ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
+        public  ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
+
+        public IEnumerable<Teacher> Teachers => TeacherDisciplines.Select(x => x.Teacher);
 
         public ICollection<ScheduleEntry> Entries { get; private set; }
+
+        public void AddTeacher(Teacher teacher)
+        {
+            TeacherDisciplines.Add(new TeacherDiscipline(this, teacher));
+        }
+
+        public void RemoveTeacher(Teacher teacher)
+        {
+            var teacherDiscipline = TeacherDisciplines.FirstOrDefault(x => x.Teacher.Id == teacher.Id);
+            if (teacherDiscipline == null) throw new ArgumentException("Teacher must be into discipline list.");
+            TeacherDisciplines.Remove(teacherDiscipline);
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace App.Services
                 cfg.CreateMap<Group, GroupDto>();
 
                 cfg.CreateMap<DisciplineDto, Discipline>();
-                cfg.CreateMap<Discipline, DisciplineDto>().ForMember("TeachersIds", opt => opt.MapFrom(c => c.TeacherDisciplines.Select(x => x.TeacherId)));
+                cfg.CreateMap<Discipline, DisciplineDto>();
 
                 cfg.CreateMap<TeacherDto, Teacher>();
                 cfg.CreateMap<Teacher, OpenTeacherDto>();
@@ -33,7 +33,10 @@ namespace App.Services
                 cfg.CreateMap<ScheduleDto, Schedule>();
                 cfg.CreateMap<Schedule, ScheduleDto>();
 
+                cfg.CreateMap<Schedule, IEnumerable<ScheduleGroupDto>>().ConvertUsing<ScheduleConverter>();
+
                 cfg.CreateMap<ScheduleEntry, ScheduleEntryDto>();
+                cfg.CreateMap<ScheduleEntry, ScheduleGroupEntryDto>();
                 cfg.CreateMap<ScheduleEntryDto, ScheduleEntry>();
             });
         }
