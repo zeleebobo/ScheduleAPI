@@ -1,6 +1,7 @@
 ﻿using App.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ScheduleApi.DataAccess;
@@ -23,7 +24,7 @@ namespace App
         {
             services.AddMvc();
 
-            ScheduleContext.ConnectionString = Configuration.GetConnectionString("PostgreSQL");
+            ScheduleContext.ConnectionString = Configuration["POSTGRES_STRING"];
             AutoMapperInitializer.Initialize();
 
             services.AddSwaggerGen(c =>
@@ -36,11 +37,18 @@ namespace App
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseExceptionHandler("/"); // TODO: create error exception page
             }
 
             app.UseMvc();

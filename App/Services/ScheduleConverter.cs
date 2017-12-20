@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using App.DtoModels;
 using AutoMapper;
@@ -21,6 +22,7 @@ namespace App.Services
             foreach (var groupEntries in entriesByGroup)
             {
                 var scheduleGroup = new ScheduleGroupDto(){Group = Mapper.Map<GroupDto>(groupEntries.Group)};
+                
 
                 var groupEntriesByDay = groupEntries.Entries
                                             .GroupBy(x => x.DayOfWeek)

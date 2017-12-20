@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleApi.Domain", "Sched
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleApi.Infrastructure", "ScheduleApi.Infrastructure\ScheduleApi.Infrastructure.csproj", "{67001E77-6D60-492F-900C-D75095D710A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScheduleApi.DataAccess", "ScheduleApi.DataAccess\ScheduleApi.DataAccess.csproj", "{0A043446-3E7A-4F8D-941B-654D78972866}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ScheduleApi.DataAccess", "ScheduleApi.DataAccess\ScheduleApi.DataAccess.csproj", "{0A043446-3E7A-4F8D-941B-654D78972866}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -20,6 +20,9 @@ namespace App
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+                /*.UseKestrel(options => {
+
+                })*/
                 .Build();
     }
 }
