@@ -7,7 +7,7 @@ namespace ScheduleApi.DataAccess
 {
     public interface IUnitOfWork : IDisposable
     {
-        IRepository<Discipline> Disciplines { get; }
+        IDisciplineRepository Disciplines { get; }
         IRepository<Group> Groups { get; }
         IRepository<Teacher> Teachers { get; }
         IRepository<Room> Rooms { get; }

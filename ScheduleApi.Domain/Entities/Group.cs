@@ -13,7 +13,7 @@ namespace ScheduleApi.Domain.Entities
         private int GetCourseNum(string groupName)
         {
             var pattern = "\\w+-\\d+";
-            if (!Regex.IsMatch(groupName, pattern, RegexOptions.Compiled)) throw new FormatException();
+            if (!Regex.IsMatch(groupName, pattern, RegexOptions.Compiled)) return 0; //throw new FormatException();
             return (int) char.GetNumericValue(groupName.Split('-')[1][0]);
         }
 

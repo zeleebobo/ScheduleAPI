@@ -21,7 +21,7 @@ namespace ScheduleApi.DataAccess
             TeacherDisciplines = new Repository<TeacherDiscipline>(context);
         }
 
-        public IRepository<Discipline> Disciplines { get; }
+        public IDisciplineRepository Disciplines { get; }
         public IRepository<Group> Groups { get; }
         public IRepository<Teacher> Teachers { get; }
         public IRepository<Room> Rooms { get; }

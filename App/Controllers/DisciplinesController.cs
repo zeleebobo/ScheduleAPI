@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using App.DtoModels;
@@ -19,9 +20,9 @@ namespace App.Controllers
         private IUnitOfWork unitOfWork = new UnitOfWork(new ScheduleContext());
 
         [HttpGet]
-        public IEnumerable<DisciplineDto> Get()
+        public IEnumerable<DisciplineDto> Get([FromQuery] int? courseNum)
         {
-            var disciplineEntities = unitOfWork.Disciplines.GetAll();
+            var disciplineEntities = courseNum == null ? unitOfWork.Disciplines.GetAll() : unitOfWork.Disciplines.GetByCourse((int) courseNum);
             var disciplines = Mapper.Map<IEnumerable<Discipline>, List<DisciplineDto>>(disciplineEntities);
             return disciplines;
         }

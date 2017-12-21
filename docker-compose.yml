@@ -1,29 +1,24 @@
-version:"3"
+version: '3'
 services:
-  web:
-    build: .
-    ports: 
-      -8080:80
-    depends_on:
-      -db
-    environment:
-      POSTGRES_STRING: Host=postgres://db;Port=5432;Database=schedule_api_db;Username=postgres;Password=postgres_pswrd"
-    networks: 
-      -schedule-api
   db:
     image: postgres
     restart: always
     ports: 
-      -5432:5432
+      - 5433:5432
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: "postgres_pswrd"
       POSTGRES_DB: "schedule_api_db"
-    networks: 
-      -schedule-api
-networks: 
-  schedule-api:
-    driver: bridge
+  web:
+    build: .
+    ports: 
+      - 8080:5000
+    depends_on:
+      - db
+    environment:
+      ASPNETCORE_URLS: "http://*:5000"
+      POSTGRES_STRING: "Server=db;Port=5432;Database=schedule_api_db;Username=postgres;Password=postgres_pswrd"
+    
 
 

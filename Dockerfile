@@ -1,26 +1,20 @@
-#FROM microsoft/aspnetcore-build:2.0.0 AS build
-#WORKDIR /code
-#COPY . .
-#RUN dotnet restore ./ScheduleApi.sln
-#RUN dotnet publish ./ScheduleApi.sln --output /output --configuration Release
-
 FROM microsoft/aspnetcore-build:2.0.3 AS build-env
 WORKDIR /app
 
-# Copy csproj and restore as distinct layers
 COPY  ScheduleApi.sln ./
 RUN dotnet restore ./ScheduleApi.sln
 
-# Copy everything else and build
 COPY . ./
 RUN dotnet publish ./ScheduleApi.sln -c Release -o out
+CMD dotnet ef migrations add init && dotnet ef database update
+
+
+
 
 FROM microsoft/aspnetcore:2.0.3
+#ENV ASPNETCORE_URLS="http://*:5000"
 WORKDIR /app
 COPY --from=build-env /app/App/out .
 
-RUN dotnet ef migrations add init
-RUN dotnet ef database update
-
-ENTRYPOINT [ "dotnet", "App.dll" ]
-CMD ["ipconfig"]
+#ENTRYPOINT [ "dotnet", "App.dll" ]
+CMD ASPNETCORE_URLS=http://*:$PORT HEROKU_STRING=$DATABASE_URL dotnet App.dll

@@ -9,9 +9,14 @@ namespace ScheduleApi.DataAccess
     public class ScheduleContext : DbContext
     {
         public static string ConnectionString { get; set; }
+
+        public ScheduleContext(): base() { }
+
+        public ScheduleContext(DbContextOptions<ScheduleContext> options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseNpgsql(ConnectionString);
+             optionsBuilder.UseNpgsql(ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
