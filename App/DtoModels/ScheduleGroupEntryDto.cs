@@ -23,7 +23,7 @@ namespace App.DtoModels
         public int SubGroupNum { get; set; }
 
         [JsonProperty("week")]
-        public int Week { get; set; }
+        public int WeekNumber { get; set; }
 
 
     }

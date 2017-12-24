@@ -20,6 +20,8 @@ namespace App.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(IEnumerable<ScheduleGroupDto>), 201)]
+        [ProducesResponseType(typeof(string), 400)]
         public IActionResult Get(int id)
         {
             var scheduleEntity = unitOfWork.Schedules.GetById(id);
@@ -28,20 +30,30 @@ namespace App.Controllers
             return Ok(schedule);
         }
 
+        /// <response code="201">Returns the newly-created schedule ID</response>
+        /// <response code="400">If the data incorrect</response>
         [HttpPost]
+        [ProducesResponseType(typeof(int), 201)]
+        [ProducesResponseType(typeof(string), 400)]
         public IActionResult Post([FromBody] ScheduleWithEntriesDto schedule)
         {
             if (!ModelState.IsValid) return BadRequest("Invalid Model Fields");
 
             var entries = schedule.Entries;
             var scheduleEntity = new Schedule() {Created = schedule.Created, Name = schedule.Name};
-            unitOfWork.Schedules.Add(scheduleEntity);
+            
             foreach (var scheduleEntryDto in entries)
             {
-                var scheduleEntry = Mapper.Map<ScheduleEntry>(scheduleEntryDto);
-                scheduleEntry.Schedule = scheduleEntity;
+                var scheduleEntry = new ScheduleEntry
+                {
+                    Schedule = scheduleEntity,
+                    DayOfWeek = scheduleEntryDto.DayOfWeek,
+                    SubGroupNum = scheduleEntryDto.SubGroupNum,
+                    WeekNumber = scheduleEntryDto.WeekNumber,
+                    Position = scheduleEntryDto.Position
+                };
 
-                var teacher = unitOfWork.Teachers.GetById(scheduleEntryDto.TeacherId);
+                var teacher = unitOfWork.Teachers.GetById(scheduleEntryDto.TeacherId); // TODO: fix this for next release (can be any teacher, must be only which in list of teachers discipline)
                 if (teacher == null) return BadRequest($"Invalid Teacher Id ({scheduleEntryDto.TeacherId})");
 
                 var discipline = unitOfWork.Disciplines.GetById(scheduleEntryDto.DisciplineId);
@@ -63,8 +75,9 @@ namespace App.Controllers
 
             if (!scheduleEntity.IsCorrect)
                 return BadRequest("error"); // TODO: create error class
+            unitOfWork.Schedules.Add(scheduleEntity);
             unitOfWork.Complete();
-            return Ok();
+            return CreatedAtAction("Get", scheduleEntity.Id);
         }
 
         [HttpDelete("{id:int}")]

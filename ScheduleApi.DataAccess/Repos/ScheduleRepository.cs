@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using ScheduleApi.Domain.Entities;
 
 namespace ScheduleApi.DataAccess.Repos
@@ -11,7 +12,10 @@ namespace ScheduleApi.DataAccess.Repos
     {
         public ScheduleRepository(DbContext context) : base(context)
         {
+            
         }
+
+        
 
         public override IEnumerable<Schedule> GetAll()
         {
@@ -20,11 +24,11 @@ namespace ScheduleApi.DataAccess.Repos
                 .ThenInclude(x => x.Teacher)
                 .Include(x => x.Entries)
                 .ThenInclude(x => x.Discipline)
+                .ThenInclude(x => x.TeacherDisciplines)
                 .Include(x => x.Entries)
                 .ThenInclude(x => x.Group)
                 .Include(x => x.Entries)
                 .ThenInclude(x => x.Room);
-
         }
 
         public override Schedule GetById(int id)
@@ -34,6 +38,7 @@ namespace ScheduleApi.DataAccess.Repos
                 .ThenInclude(x => x.Teacher)
                 .Include(x => x.Entries)
                 .ThenInclude(x => x.Discipline)
+                .ThenInclude(x => x.TeacherDisciplines)
                 .Include(x => x.Entries)
                 .ThenInclude(x => x.Group)
                 .Include(x => x.Entries)

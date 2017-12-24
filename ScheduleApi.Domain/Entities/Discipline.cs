@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 
@@ -11,6 +12,7 @@ namespace ScheduleApi.Domain.Entities
         public Discipline()
         {
             TeacherDisciplines = new List<TeacherDiscipline>();
+            
         }
 
         [Key]
@@ -21,6 +23,7 @@ namespace ScheduleApi.Domain.Entities
 
         public  ICollection<TeacherDiscipline> TeacherDisciplines { get; private set; }
 
+        [NotMapped]
         public IEnumerable<Teacher> Teachers => TeacherDisciplines.Select(x => x.Teacher);
 
         public ICollection<ScheduleEntry> Entries { get; private set; }

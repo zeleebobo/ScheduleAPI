@@ -6,7 +6,7 @@ RUN dotnet restore ./ScheduleApi.sln
 
 COPY . ./
 RUN dotnet publish ./ScheduleApi.sln -c Release -o out
-CMD dotnet ef migrations add init && dotnet ef database update
+#CMD dotnet ef migrations add init && dotnet ef database update
 
 
 

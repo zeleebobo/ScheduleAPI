@@ -24,6 +24,9 @@ namespace ScheduleApi.Domain.Entities
         public DaysEnum DayOfWeek { get; set; }
 
         [Required]
+        public int Position { get; set; }
+
+        [Required]
         public int WeekNumber { get; set; }
 
         [Required]

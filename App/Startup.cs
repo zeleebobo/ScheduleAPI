@@ -21,24 +21,28 @@ namespace App
 
         public IConfiguration Configuration { get; }
 
+        private string HerokuToEfString(string herokuString)
+        {
+            // [database type]://[username]:[password]@[host]:[port]/[database name]
+            var list = herokuString.Split(':');
+            var username = list[1].Substring(2);
+            var passHost = list[2].Split('@');
+            var password = passHost[0];
+            var host = passHost[1];
+            var portDbName = list[3].Split('/');
+            var port = portDbName[0];
+            var dbName = portDbName[1];
+            return $"Host={host};Port={port};Database={dbName};Username={username};Password={password}";
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration["POSTGRES_STRING"] ?? "Host=localhost;Port=5432;Database=schedule_api_db_3;Username=postgres;Password=pass";
+            var connectionString = Configuration["POSTGRES_STRING"] ?? "Host=localhost;Port=5432;Database=schedule_api_db_3;Username=postgres;Password=5525854565";
             var herokuString = Configuration["HEROKU_STRING"] ?? "";
             if (herokuString != "")
             {
-                // [database type]://[username]:[password]@[host]:[port]/[database name]
-                var list = herokuString.Split(':');
-                var username = list[1].Substring(2);
-                var passHost = list[2].Split('@');
-                var password = passHost[0];
-                var host = passHost[1];
-                var portDbName = list[3].Split('/');
-                var port = portDbName[0];
-                var dbName = portDbName[1];
-
-                connectionString = $"Host={host};Port={port};Database={dbName};Username={username};Password={password}";
+                connectionString = HerokuToEfString(herokuString);
             }
 
             ScheduleContext.ConnectionString = connectionString;

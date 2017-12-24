@@ -16,7 +16,8 @@ namespace ScheduleApi.DataAccess
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-             optionsBuilder.UseNpgsql(ConnectionString);
+             //if (ConnectionString == null) ConnectionString = "Host=localhost;Port=5432;Database=schedule_api_db_3;Username=postgres;Password=5525854565";
+            optionsBuilder.UseNpgsql(ConnectionString);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

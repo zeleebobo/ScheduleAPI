@@ -38,5 +38,9 @@ namespace App.DtoModels
         [JsonProperty("subGroupNum")]
         [JsonRequired]
         public int SubGroupNum { get; set; }
+
+        [JsonProperty("position")]
+        [JsonRequired]
+        public int Position { get; set; }
     }
 }
